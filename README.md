@@ -9,3 +9,4 @@
 | [05.12.021](https://github.com/FabianKielmann/advent-of-code/tree/main/day_5) | ☑ | ☑ |
 | [06.12.021](https://github.com/FabianKielmann/advent-of-code/tree/main/day_6) | ☑ | ☑ |
 | [07.12.021](https://github.com/FabianKielmann/advent-of-code/tree/main/day_7) | ☑ | ☑ |
+| [08.12.021](https://github.com/FabianKielmann/advent-of-code/tree/main/day_8) | ☑ | ❌ |
