@@ -1,90 +1,79 @@
-// Credits to Jonas Nikolic for helping
+// Credits to https://github.com/ShedFlu for helping.
 
 const fs = require('fs')
 const input = fs.readFileSync(`${__dirname}/input.txt`, 'utf8')
 
-const data = input.split('\n').map((line) => line.split(' | ')).map(([patterns, outputs]) => [patterns.split(" "), outputs.split(" ")]);
+const data = input.split('\r\n').map((line) => line.split(' | ')).map(([patterns, outputs]) => [patterns.split(' '), outputs.split(' ')])
 
-const decodedOutputs = [];
+const lengthMapping = {
+  2: 1,
+  3: 7,
+  4: 4,
+  5: null,
+  6: null,
+  7: 8,
+}
 
-data.forEach(line => {
-  const patterns = line[0]
-  const outputs = line[1]
+const decodedOutputs = []
 
-  const patternRecognition = Array(10)
+data.forEach(([patterns, outputs]) => {
+  const patternDecoder = Array(10)
   const remainingPatterns = []
 
   patterns.forEach(pattern => {
-    pattern = pattern.split('').sort().join('')
+    pattern = pattern.split('').sort()
 
-    switch (pattern.length) {
-      // It's a ONE
-      case 2:
-        patternRecognition[1] = pattern.split('')
-
-        break
-
-      // It's a SEVEN
-      case 3:
-        patternRecognition[7] = pattern.split('')
-        break
-
-      // It's a FOUR
-      case 4:
-        patternRecognition[4] = pattern.split('')
-        break
-
-      // It's an EIGHT
-      case 7:
-        patternRecognition[8] = pattern.split('')
-        break
-    
-      default:
-        remainingPatterns.push(pattern)
-        break
+    if (![5, 6].includes(pattern.length)) {
+      patternDecoder[lengthMapping[pattern.length]] = pattern
+    } else {
+      remainingPatterns.push(pattern)
     }
   })
 
-  const bd = patternRecognition[4].filter(char => char !== patternRecognition[1][0] && char !== patternRecognition[1][1])
+  //      aaaa
+  //     b    c
+  //     b    c
+  //      dddd
+  //     e    f
+  //     e    f
+  //      gggg
+  //
+  // The above shows why the following const is named "bd"
+  const bd = patternDecoder[4].filter(char => char !== patternDecoder[1][0] && char !== patternDecoder[1][1])
 
   remainingPatterns.forEach(pattern => {
-    switch (pattern.length) {
-      case 5:
-        if (includesAll(pattern, patternRecognition[1])) {
-          // if it contains same chars as 1, then it's a 3
-          patternRecognition[3] = pattern.split('')
-        } else if (includesAll(pattern, bd)) {
-          // if it contains same chars as "bd", it's a 5
-          patternRecognition[5] = pattern.split('')
-        } else {
-          // else it's a 2
-          patternRecognition[2] = pattern.split('')
-        }
-
-        break;
-
-      case 6:
-        if (includesAll(pattern, patternRecognition[4])) {
-          // if it contains same chars as 4, it's a 9
-          patternRecognition[9] = pattern.split('')
-        } else if (includesAll(pattern, bd)) {
-          // if it contains same chars as "bd", it's a 6
-          patternRecognition[6] = pattern.split('')
-        } else {
-          // else it's a 0
-          patternRecognition[0] = pattern.split('')
-        }
-        break
-    
-      default:
-        break;
+    if (pattern.length === 5) {
+      if (includesAll(pattern, patternDecoder[1])) {
+        // if it contains same chars as 1, then it's a 3
+        patternDecoder[3] = pattern
+      } else if (includesAll(pattern, bd)) {
+        // if it contains same chars as "bd", it's a 5
+        patternDecoder[5] = pattern
+      } else {
+        // else it's a 2
+        patternDecoder[2] = pattern
+      }
+    } else if (pattern.length === 6) {
+      if (includesAll(pattern, patternDecoder[4])) {
+        // if it contains same chars as 4, it's a 9
+        patternDecoder[9] = pattern
+      } else if (includesAll(pattern, bd)) {
+        // if it contains same chars as "bd", it's a 6
+        patternDecoder[6] = pattern
+      } else {
+        // else it's a 0
+        patternDecoder[0] = pattern
+      }
     }
   })
 
   let decodedOutput = []
+
   outputs.forEach((output, i) => {
+    // Sorting to make it easily comparable
     output = output.split('').sort().join('')
-    patternRecognition.forEach((pattern, i) => {
+
+    patternDecoder.forEach((pattern, i) => {
       if (pattern.join('') === output) decodedOutput.push(i)
     })
   })
@@ -92,14 +81,14 @@ data.forEach(line => {
   decodedOutputs.push(parseInt(decodedOutput.join('')))
 })
 
-console.log(decodedOutputs);
-
-console.log(`There are \x1b[33m${decodedOutputs.reduce((a, b) => a + b)}\x1b[0m instances of digits that use a unique number of segments`)
+console.log(`The sum of all decoded output values is \x1b[33m${decodedOutputs.reduce((a, b) => a + b)}\x1b[0m.`)
 
 function includesAll(stringToCheck, requiredCharsArr) {
   let check = true
+
   requiredCharsArr.forEach(char => {
     if (!stringToCheck.includes(char)) check = false
   })
+
   return check
 }
