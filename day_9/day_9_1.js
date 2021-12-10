@@ -1,14 +1,17 @@
 const fs = require('fs')
 const input = fs.readFileSync(`${__dirname}/input.txt`, 'utf8')
 
-const data = input.split('\r\n').map(line => line.split('').map(num => parseInt(num)))
+const data = input.split('\n').map(line => line.split('').map(num => parseInt(num)))
 
 let valids = []
 
 data.forEach((row, y) => {
   row.forEach((col, x) => {
-    const lowerThanCurrent = getSurroundings({ x, y }).filter(el => el <= data[y][x])
-    if (lowerThanCurrent.length === 0) valids.push(data[y][x])
+    const current = data[y][x]
+    const [top, right, bottom, left] = getSurroundings({ x, y })
+
+    const lowerThanCurrent = [top, right, bottom, left].filter(el => el <= current)
+    if (lowerThanCurrent.length === 0) valids.push(current)
   })
 })
 
@@ -23,12 +26,12 @@ function getSurroundings(current) {
   const bottom = { x: current.x, y: current.y + 1 }
   const left = { x: current.x + -1, y: current.y }
 
-  let arr = []
+  let arr = Array(4)
 
-  if (top.y >= 0) arr.push(data[top.y][top.x])
-  if (right.x < data[0].length) arr.push(data[right.y][right.x])
-  if (bottom.y < data.length) arr.push(data[bottom.y][bottom.x])
-  if (left.x >= 0) arr.push(data[left.y][left.x])
+  if (top.y >= 0)               arr[0] = data[top.y][top.x]
+  if (right.x < data[0].length) arr[1] = data[right.y][right.x]
+  if (bottom.y < data.length)   arr[2] = data[bottom.y][bottom.x]
+  if (left.x >= 0)              arr[3] = data[left.y][left.x]
 
   return arr
 }
