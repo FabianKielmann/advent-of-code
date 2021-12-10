@@ -5,4 +5,5 @@ For this puzzle, I've very quickly created a visualization, using only some CSS 
 Here's a [live demo](https://fabiankielmann-aoc-day9.surge.sh).
 
 And here's a video which shows how it was done:
-https://user-images.githubusercontent.com/56976420/145580265-39df469e-d7f4-42fd-ba24-582dc99feb23.mp4
+
+https://user-images.githubusercontent.com/56976420/145580769-15a30681-d0ab-45be-9c45-937a6fb2f22a.mp4
