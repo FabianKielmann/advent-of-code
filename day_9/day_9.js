@@ -6,6 +6,7 @@ const data = input.split('\r\n').map(line => line.split('').map(num => parseInt(
 const lowestLocations = []
 const basins = []
 
+// Part 1
 data.forEach((row, y) => {
   row.forEach((col, x) => {
     const currentValue = data[y][x]
@@ -19,30 +20,31 @@ const riskLevelsSum = lowestLocations.map(el => el.value + 1).reduce((prev, next
 
 console.log(`Part 1: The risk level sum of all low points is \x1b[33m${riskLevelsSum}\x1b[0m.`)
 
+// Part 2
 lowestLocations.forEach(lowestLocation => {
-  let basinCount = 1
   const locationsQueue = [lowestLocation]
-  const alreadyChecked = []
+  const basin = []
 
   while (locationsQueue.length > 0) {
-    let current = locationsQueue[0]; // Set current element to the first element in queue
-    alreadyChecked.push(`${current.x},${current.y}`) // Add it to the alreadyChecked array
-    const surroundings = getSurroundings(current) // Get it's surroundings
-    locationsQueue.splice(0, 1) // Remove it from the queue
+    let current = locationsQueue[0];
+    const surroundings = getSurroundings(current)
+    locationsQueue.splice(0, 1)
     
-    // Check all surroundings of current location
     surroundings.forEach(el => {
-      if (!alreadyChecked.includes(`${el.x},${el.y}`) && el.value < 9) {
-        basinCount++ // Increase the basin count
-        locationsQueue.push(el) // Push it to the locationsQueue so it's surroundings can be checked next
+      if (!basin.includes(`${el.x},${el.y}`) && el.value < 9) {
+        basin.push(`${el.x},${el.y}`)
+        locationsQueue.push(el) 
       }
     })
   }
 
-  basins.push(basinCount)
+  basins.push(basin.length)
 })
 
-console.table(basins);
+// Multiply together the sizes of the three largest basins
+const p2_result = basins.sort((a, b) => a - b).slice(-3).reduce((a, b) => a * b)
+
+console.log(`Part 2: The risk level sum of all low points is \x1b[33m${p2_result}\x1b[0m.`)
 
 function getSurroundings(current) {
   const top = { x: current.x + 0, y: current.y + -1 }
@@ -58,25 +60,4 @@ function getSurroundings(current) {
   if (left.x >= 0)              arr[3] = { ...left, value: data[left.y][left.x] }
 
   return arr
-}
-
-// function getTop(current) {
-//   if (current.y == 0) return false
-
-//   const x = current.x + 0
-//   const y = current.y + -1
-
-//   return { x, y, value: data[y][x] }
-// }
-
-function copyData() { return data.map(arr => arr.slice()) }
-
-function showBasin(basin) {
-  const dataCopy = copyData()
-
-  basin.forEach(el => {
-    dataCopy[el.y][el.x] = 'X'
-  })
-
-  console.table(dataCopy)
 }
