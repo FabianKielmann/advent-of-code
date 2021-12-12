@@ -2,7 +2,7 @@ const fs = require('fs')
 const input = fs.readFileSync(`${__dirname}/input.txt`, 'utf8')
 
 // Preparing data
-const data = input.split('\n').map(line => line.split(' -> ').map(xy => xy.split(',').map(el => parseInt(el))))
+const data = input.split(/\r?\n/).map(line => line.split(' -> ').map(xy => xy.split(',').map(el => parseInt(el))))
 
 function solvePuzzle(part = 1) {
   // Creating the diagram

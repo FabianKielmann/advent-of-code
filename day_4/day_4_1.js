@@ -1,10 +1,10 @@
 const fs = require('fs')
 const input = fs.readFileSync(`${__dirname}/input.txt`, 'utf8')
 
-const data = input.split('\n\n')
+const data = input.split(/\r?\n\r?\n/)
 
 const numberOrder = data[0].split(',').map(num => parseInt(num))
-const bingoFields = data.slice(1).map(field => field.replace('  ', ' ').split('\n').map(row => row.trim().replace('  ', ' ').split(' ').filter(el => el !== '').map(num => parseInt(num))))
+const bingoFields = data.slice(1).map(field => field.replace('  ', ' ').split(/\r?\n/).map(row => row.trim().replace('  ', ' ').split(' ').filter(el => el !== '').map(num => parseInt(num))))
 
 let bingoFound = false
 

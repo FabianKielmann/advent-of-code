@@ -3,7 +3,7 @@
 const fs = require('fs')
 const input = fs.readFileSync(`${__dirname}/input.txt`, 'utf8')
 
-const data = input.split('\r\n').map((line) => line.split(' | ')).map(([patterns, outputs]) => [patterns.split(' '), outputs.split(' ')])
+const data = input.split(/\r?\n/).map((line) => line.split(' | ')).map(([patterns, outputs]) => [patterns.split(' '), outputs.split(' ')])
 
 const lengthMapping = {
   2: 1,

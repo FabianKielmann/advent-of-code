@@ -1,7 +1,7 @@
 const fs = require('fs')
 const input = fs.readFileSync(`${__dirname}/input.txt`, 'utf8')
 
-const data = input.split('\n').map(cmd => cmd.split(' '))
+const data = input.split(/\r?\n/).map(cmd => cmd.split(' '))
 
 const state = { pos: 0, depth: 0, aim: 0 }
 

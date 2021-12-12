@@ -1,7 +1,7 @@
 const fs = require('fs')
 const input = fs.readFileSync(`${__dirname}/input.txt`, 'utf8')
 
-const data = input.split('\r\n').map(line => line.split('').map(num => parseInt(num)))
+const data = input.split(/\r?\n/).map(line => line.split('').map(num => parseInt(num)))
 
 const lowestLocations = []
 const basins = []

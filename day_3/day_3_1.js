@@ -1,7 +1,7 @@
 const fs = require('fs')
 const input = fs.readFileSync(`${__dirname}/input.txt`, 'utf8')
 
-const data = input.split('\n')
+const data = input.split(/\r?\n/)
 
 let gammaRateArr = new Array(data[0].length).fill(0)
 
