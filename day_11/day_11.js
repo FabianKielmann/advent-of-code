@@ -1,11 +1,14 @@
 const fs = require('fs')
 const input = fs.readFileSync(`${__dirname}/input.txt`, 'utf8')
+const inputData = input.split(/\r?\n/).map(el => el.split('').map(el => parseInt(el)))
 
-const data = input.split(/\r?\n/).map(el => el.split('').map(el => parseInt(el)))
+let data = JSON.parse(JSON.stringify(inputData))
 
 let flashCount = 0
 
 function step() {
+  flashCount = 0
+
   data.forEach((row, rowIdx) => {
     row.forEach((octo, octoIdx) => {
       increase(octoIdx, rowIdx)
@@ -68,6 +71,19 @@ function getSurroundings(current) {
   return arr
 }
 
-for (let i = 0; i < 100; i++) step()
+// Part 1
+let result = 0
+for (let i = 0; i < 100; i++) result += step()
+console.log(`Part 1: After 100 steps, the flashCount is \x1b[33m${result}\x1b[0m.`)
 
-console.log(`Part 1: After 100 steps, the flashCount is \x1b[33m${flashCount}\x1b[0m.`)
+// Part 2
+data = JSON.parse(JSON.stringify(inputData))
+let flashingOctoCount = 0
+let i = 0
+
+while(flashingOctoCount !== 100) {
+  flashingOctoCount = step()
+  i++
+}
+
+console.log(`Part 2: All octopussies flash after \x1b[33m${i}\x1b[0m steps.`)
